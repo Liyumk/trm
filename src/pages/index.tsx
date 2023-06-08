@@ -10,7 +10,11 @@ const Home: NextPage = () => {
 
   return (
     <div className="flex h-screen flex-col items-center justify-center p-5">
-      <div className="w-full max-w-xl">
+      <div className="text-center">
+      <p className="text-3xl font-bold">Trim</p>
+        <p className="text-lg">Shorter. Easier. Cleaner.</p>
+      </div>
+      <div className="mt-8 w-full max-w-xl">
         <InputUrlForm />
       </div>
       <div className="mt-2 flex w-full max-w-xl justify-between bg-slate-600 p-2">
