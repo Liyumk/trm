@@ -8,7 +8,7 @@ const Home: NextPage = () => {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
   return (
-    <div className="container flex h-screen items-center justify-center">
+    <div className=" flex h-screen items-center justify-center ">
       <div>{hello.data?.greeting ?? "No data"}</div>
     </div>
   );
