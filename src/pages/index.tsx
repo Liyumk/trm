@@ -11,8 +11,8 @@ const Home: NextPage = () => {
   return (
     <div className="flex h-screen flex-col items-center justify-center p-5">
       <div className="text-center">
-      <p className="text-3xl font-bold">Trim</p>
-        <p className="text-lg">Shorter. Easier. Cleaner.</p>
+        <p className="text-3xl font-bold">TRIM</p>
+        <p className="text-md">Shorter. Easier. Cleaner.</p>
       </div>
       <div className="mt-8 w-full max-w-xl">
         <InputUrlForm />
