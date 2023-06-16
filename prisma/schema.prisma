@@ -15,17 +15,12 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-}
-
 model Url {
     id        String   @id @default(cuid())
-    userId    String
+    userId    String?
     longUrl   String
-    shortUrl  String   @unique
+    shortCode String?  @unique
+    alias     String?  @unique
     clicks    Int      @default(0)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

@@ -5,13 +5,23 @@ import {
   publicProcedure,
   protectedProcedure,
 } from "@/server/api/trpc";
-import { validationShcemaShortenCreate } from "../validation-schemas/shorten.schema";
+import {
+  validationSchemaShortenCreate,
+  validationSchemaShortenFind,
+} from "../validation-schemas/shorten.schema";
+import ShortenEntity from "@/server/businees-logic/shorten.entity";
 
 export const shortenRouter = createTRPCRouter({
   create: publicProcedure
-    .input(validationShcemaShortenCreate)
+    .input(validationSchemaShortenCreate)
     .mutation(async ({ ctx, input }) => {
-      const { url } = input;
-      console.log(`Long URL: ${url}`);
+      new ShortenEntity().create(input);
+    }),
+  show: publicProcedure
+    .input(validationSchemaShortenFind)
+    .query(async ({ ctx, input }) => {
+      new ShortenEntity().find(input);
     }),
 });
+
+const shortenURL = async (longUrl: string) => {};

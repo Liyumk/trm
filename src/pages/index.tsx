@@ -6,8 +6,6 @@ import { api } from "@/utils/api";
 import { DocumentDuplicateIcon } from "@heroicons/react/24/outline";
 
 const Home: NextPage = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
-
   return (
     <div className="flex h-screen flex-col items-center justify-center p-5">
       <div className="text-center">
