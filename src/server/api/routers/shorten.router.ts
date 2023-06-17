@@ -15,7 +15,8 @@ export const shortenRouter = createTRPCRouter({
   create: publicProcedure
     .input(validationSchemaShortenCreate)
     .mutation(async ({ ctx, input }) => {
-      new ShortenEntity().create(input);
+      const data = await new ShortenEntity().create(input);
+      return data;
     }),
   show: publicProcedure
     .input(validationSchemaShortenFind)

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const validationSchemaShortenCreate = z.object({
-  url: z.string().url(),
+  url: z.string(),
   alias: z.string().optional(),
 });
 

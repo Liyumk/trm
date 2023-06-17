@@ -16,6 +16,8 @@ export default class ShortenEntity {
       return url;
     }
 
+    this.isUrl(newLongUrl);
+
     const shortCode = await this.shortenUrl();
     const newUrl = await prisma.url.create({
       data: {
@@ -24,7 +26,6 @@ export default class ShortenEntity {
         alias: alias ? alias : null,
       },
     });
-
     return newUrl;
   }
 
@@ -44,7 +45,7 @@ export default class ShortenEntity {
 
   private async shortenUrl() {
     let isUnique = false;
-    let shortCode = null;
+    let shortCode = "";
 
     while (!isUnique) {
       shortCode = "";
@@ -59,5 +60,18 @@ export default class ShortenEntity {
     }
 
     return shortCode;
+  }
+
+  private async isUrl(url: string) {
+    const urlPattern = /^(https?:\/\/)?(www\.)?[^\s/$.?#].[^\s]*$/i;
+    var isURL = urlPattern.test(url);
+
+    if (!isURL)
+      throw new TRPCError({
+        code: "UNPROCESSABLE_CONTENT",
+        message: "Invalid URL",
+      });
+
+    return url;
   }
 }

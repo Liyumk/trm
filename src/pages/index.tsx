@@ -4,8 +4,25 @@ import Head from "next/head";
 import Link from "next/link";
 import { api } from "@/utils/api";
 import { DocumentDuplicateIcon } from "@heroicons/react/24/outline";
+import { useEffect } from "react";
 
 const Home: NextPage = () => {
+  const { mutate, data, isLoading } = api.url.create.useMutation({
+    onSuccess: (data) => {
+      console.log("onSuccess", data);
+    },
+  });
+
+  const handleShortenUrl = async () => {
+    console.log("handleShortenUrl");
+  };
+
+  useEffect(() => {
+    mutate({
+      url: "https://www.googlee.com",
+    });
+  }, []);
+
   return (
     <div className="flex h-screen flex-col items-center justify-center p-5">
       <div className="text-center">
@@ -13,7 +30,7 @@ const Home: NextPage = () => {
         <p className="text-md">Shorter. Easier. Cleaner.</p>
       </div>
       <div className="mt-8 w-full max-w-xl">
-        <InputUrlForm />
+        <InputUrlForm handleShortenUrl={handleShortenUrl} />
       </div>
       <div className="mt-2 flex w-full max-w-xl justify-between bg-slate-600 p-2">
         <p className="text-slate-300">Hey this is your url copy it</p>
@@ -28,7 +45,11 @@ const Home: NextPage = () => {
   );
 };
 
-const InputUrlForm = () => {
+const InputUrlForm = ({
+  handleShortenUrl,
+}: {
+  handleShortenUrl: () => void;
+}) => {
   return (
     <div className="flex rounded bg-slate-100">
       <input
@@ -43,6 +64,9 @@ const InputUrlForm = () => {
       <button
         type="button"
         className="rounded-r bg-slate-100 px-3.5 py-2.5 text-slate-800 shadow-sm hover:bg-slate-200"
+        onClick={() => {
+          handleShortenUrl();
+        }}
       >
         Shorten!
       </button>
