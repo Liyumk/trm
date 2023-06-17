@@ -11,15 +11,14 @@ export default class UrlEntity {
   async create(input: ValidationSchemaUrlCreate) {
     const { url: newLongUrl, alias, luid } = input;
 
+    this.isUrl(newLongUrl);
+
     const url = await prisma.url.findFirst({
       where: { longUrl: newLongUrl, userId: luid },
     });
-
     if (url) {
       return url;
     }
-
-    this.isUrl(newLongUrl);
 
     const shortCode = await this.shortenUrl();
     const newUrl = await prisma.url.create({
@@ -67,8 +66,11 @@ export default class UrlEntity {
   }
 
   private async isUrl(url: string) {
-    const urlPattern = /^(https?:\/\/)?(www\.)?[^\s/$.?#].[^\s]*$/i;
+    const urlPattern =
+      /^(https?:\/\/)?(www\.)?[a-zA-Z0-9-_.~!*'();:@&=+$,/?#[\]]+\.[a-zA-Z0-9-_.~!*'();:@&=+$,/?#[\]]+$/i;
+
     var isURL = urlPattern.test(url);
+    console.log(url, "isUrl", isURL);
 
     if (!isURL)
       throw new TRPCError({

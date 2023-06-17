@@ -4,22 +4,21 @@ import Head from "next/head";
 import Link from "next/link";
 import { api } from "@/utils/api";
 import { DocumentDuplicateIcon } from "@heroicons/react/24/outline";
-import { useEffect } from "react";
-import { useLocalUser } from "@/hooks/useLocalUser";
+
+import { getLocalUser } from "@/utils/getLocalUser";
 
 const Home: NextPage = () => {
-  const { luid } = useLocalUser();
   const { mutate, data, isLoading } = api.url.create.useMutation({
     onSuccess: (data) => {
-      console.log("onSuccess create url", data.shortCode);
+      console.log("onSuccess create url", data?.shortCode);
     },
   });
 
   const handleShortenUrl = async () => {
-    console.log("handleShortenUrl luid", luid);
+    const luid = getLocalUser();
     mutate({
       luid: luid,
-      url: "https://www.googlee.com",
+      url: "google.com",
     });
   };
 

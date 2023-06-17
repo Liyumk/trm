@@ -5,12 +5,14 @@ import { api } from "@/utils/api";
 import "@/styles/globals.css";
 import Head from "next/head";
 import { useLocalUser } from "@/hooks/useLocalUser";
+import { useEffect } from "react";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
   useLocalUser();
+
   return (
     <SessionProvider session={session}>
       <Head>
