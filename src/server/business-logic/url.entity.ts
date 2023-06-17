@@ -1,14 +1,14 @@
 import { z } from "zod";
 import {
-  ValidationSchemaShortenCreate,
-  ValidationSchemaShortenFind,
-} from "../api/validation-schemas/shorten.schema";
+  ValidationSchemaUrlCreate,
+  ValidationSchemaUrlFind,
+} from "../api/validation-schemas/url.schema";
 import { prisma } from "../db";
 import { ALIAS_LENGTH, CHARACTERS } from "@/utils/constants";
 import { TRPCError } from "@trpc/server";
 
-export default class ShortenEntity {
-  async create(input: ValidationSchemaShortenCreate) {
+export default class UrlEntity {
+  async create(input: ValidationSchemaUrlCreate) {
     const { url: newLongUrl, alias } = input;
     const url = await prisma.url.findFirst({ where: { longUrl: newLongUrl } });
 
@@ -29,7 +29,7 @@ export default class ShortenEntity {
     return newUrl;
   }
 
-  async find(input: ValidationSchemaShortenFind) {
+  async find(input: ValidationSchemaUrlFind) {
     const { url: longUrl } = input;
     const url = await prisma.url.findFirst({ where: { longUrl } });
 

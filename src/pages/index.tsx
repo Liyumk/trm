@@ -9,7 +9,7 @@ import { useEffect } from "react";
 const Home: NextPage = () => {
   const { mutate, data, isLoading } = api.url.create.useMutation({
     onSuccess: (data) => {
-      console.log("onSuccess", data);
+      // console.log("onSuccess", data);
     },
   });
 
