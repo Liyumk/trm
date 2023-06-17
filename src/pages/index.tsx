@@ -5,23 +5,23 @@ import Link from "next/link";
 import { api } from "@/utils/api";
 import { DocumentDuplicateIcon } from "@heroicons/react/24/outline";
 import { useEffect } from "react";
+import { useLocalUser } from "@/hooks/useLocalUser";
 
 const Home: NextPage = () => {
+  const { luid } = useLocalUser();
   const { mutate, data, isLoading } = api.url.create.useMutation({
     onSuccess: (data) => {
-      // console.log("onSuccess", data);
+      console.log("onSuccess create url", data.shortCode);
     },
   });
 
   const handleShortenUrl = async () => {
-    console.log("handleShortenUrl");
-  };
-
-  useEffect(() => {
+    console.log("handleShortenUrl luid", luid);
     mutate({
+      luid: luid,
       url: "https://www.googlee.com",
     });
-  }, []);
+  };
 
   return (
     <div className="flex h-screen flex-col items-center justify-center p-5">

@@ -2,7 +2,7 @@ import { api } from "@/utils/api";
 import { useEffect, useState } from "react";
 
 export const useLocalUser = () => {
-  const [luid, setLuid] = useState<string | null>(null);
+  const [luid, setLuid] = useState<string>("");
   const { mutateAsync } = api.user.createTemporary.useMutation();
 
   useEffect(() => {

@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const validationSchemaUrlCreate = z.object({
+  luid: z.string(),
   url: z.string(),
   alias: z.string().optional(),
 });

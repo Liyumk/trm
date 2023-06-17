@@ -9,8 +9,11 @@ import { TRPCError } from "@trpc/server";
 
 export default class UrlEntity {
   async create(input: ValidationSchemaUrlCreate) {
-    const { url: newLongUrl, alias } = input;
-    const url = await prisma.url.findFirst({ where: { longUrl: newLongUrl } });
+    const { url: newLongUrl, alias, luid } = input;
+
+    const url = await prisma.url.findFirst({
+      where: { longUrl: newLongUrl, userId: luid },
+    });
 
     if (url) {
       return url;
@@ -23,6 +26,7 @@ export default class UrlEntity {
       data: {
         longUrl: newLongUrl,
         shortCode: shortCode,
+        userId: luid,
         alias: alias ? alias : null,
       },
     });
