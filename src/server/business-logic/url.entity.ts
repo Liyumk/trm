@@ -65,7 +65,7 @@ export default class UrlEntity {
     return shortCode;
   }
 
-  private async isUrl(url: string) {
+  private isUrl(url: string) {
     const urlPattern =
       /^(https?:\/\/)?(www\.)?[a-zA-Z0-9-_.~!*'();:@&=+$,/?#[\]]+\.[a-zA-Z0-9-_.~!*'();:@&=+$,/?#[\]]+$/i;
 
@@ -74,9 +74,10 @@ export default class UrlEntity {
 
     if (!isURL)
       throw new TRPCError({
-        code: "UNPROCESSABLE_CONTENT",
+        code: "BAD_REQUEST",
         message: "Invalid URL",
       });
+    // return;
 
     return url;
   }

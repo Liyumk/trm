@@ -1,3 +1,1 @@
-export const getLocalUser = () => {
-  return localStorage.getItem("luid") ?? "";
-};
+export const getLocalUser = () => localStorage.getItem("luid") ?? "";

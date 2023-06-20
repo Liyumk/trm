@@ -4,24 +4,11 @@ import Head from "next/head";
 import Link from "next/link";
 import { api } from "@/utils/api";
 import { DocumentDuplicateIcon } from "@heroicons/react/24/outline";
-
 import { getLocalUser } from "@/utils/getLocalUser";
+import { useEffect, useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 const Home: NextPage = () => {
-  const { mutate, data, isLoading } = api.url.create.useMutation({
-    onSuccess: (data) => {
-      console.log("onSuccess create url", data?.shortCode);
-    },
-  });
-
-  const handleShortenUrl = async () => {
-    const luid = getLocalUser();
-    mutate({
-      luid: luid,
-      url: "google.com",
-    });
-  };
-
   return (
     <div className="flex h-screen flex-col items-center justify-center p-5">
       <div className="text-center">
@@ -29,7 +16,7 @@ const Home: NextPage = () => {
         <p className="text-md">Shorter. Easier. Cleaner.</p>
       </div>
       <div className="mt-8 w-full max-w-xl">
-        <InputUrlForm handleShortenUrl={handleShortenUrl} />
+        <InputUrlForm />
       </div>
       <div className="mt-2 flex w-full max-w-xl justify-between bg-slate-600 p-2">
         <p className="text-slate-300">Hey this is your url copy it</p>
@@ -44,31 +31,62 @@ const Home: NextPage = () => {
   );
 };
 
-const InputUrlForm = ({
-  handleShortenUrl,
-}: {
-  handleShortenUrl: () => void;
-}) => {
-  return (
-    <div className="flex rounded bg-slate-100">
-      <input
-        type="text"
-        id="first_name"
-        className="block w-full rounded-l bg-white p-2.5 text-sm text-gray-900  outline-0 outline-slate-600 dark:bg-white dark:placeholder-slate-400"
-        placeholder="http://yourURL"
-        required
-        autoComplete="off"
-      />
+type Inputs = {
+  url: string;
+};
 
-      <button
-        type="button"
-        className="rounded-r bg-slate-100 px-3.5 py-2.5 text-slate-800 shadow-sm hover:bg-slate-200"
-        onClick={() => {
-          handleShortenUrl();
-        }}
+const InputUrlForm = () => {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<Inputs>();
+
+  const { mutate, data, isLoading, error } = api.url.create.useMutation({
+    onSuccess: (data) => {
+      console.log("onSuccess create url", data?.shortCode);
+    },
+    onError: (error) => {
+      console.log("error has occured", error.data?.code);
+    },
+  });
+
+  useEffect(() => {
+    const errorMessage = error?.data?.zodError?.fieldErrors;
+
+    console.log("errorMessage", errorMessage);
+  }, [error]);
+
+  const onSubmit: SubmitHandler<Inputs> = (data) => {
+    mutate({
+      url: data.url,
+      luid: getLocalUser(),
+    });
+  };
+  return (
+    <div>
+      <form
+        className="flex rounded bg-slate-100"
+        onSubmit={handleSubmit(onSubmit)}
       >
-        Shorten!
-      </button>
+        <input
+          id="first_name"
+          placeholder="http://yourURL"
+          className="block w-full rounded-l bg-white p-2.5 text-sm text-gray-900  outline-0 outline-slate-600 dark:bg-white dark:placeholder-slate-400"
+          autoComplete="off"
+          {...register("url", { required: "Please enter your URL" })}
+        />
+        <button
+          type="submit"
+          className="rounded-r bg-slate-100 px-3.5 py-2.5 text-slate-800 shadow-sm hover:bg-slate-200"
+        >
+          Shorten!
+        </button>
+      </form>
+      {errors.url?.message && (
+        <span className="text-xs text-red-400">{errors.url?.message}</span>
+      )}
     </div>
   );
 };
