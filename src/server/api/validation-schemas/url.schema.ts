@@ -12,6 +12,7 @@ export type ValidationSchemaUrlCreate = z.TypeOf<
 
 export const validationSchemaUrlFind = z.object({
   url: z.string().url(),
+  luid: z.string(),
 });
 
 export type ValidationSchemaUrlFind = z.TypeOf<typeof validationSchemaUrlFind>;

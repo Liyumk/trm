@@ -21,7 +21,7 @@ export const urlRouter = createTRPCRouter({
   show: publicProcedure
     .input(validationSchemaUrlFind)
     .query(async ({ ctx, input }) => {
-      new UrlEntity().find(input);
+      return await new UrlEntity().find(input);
     }),
 });
 

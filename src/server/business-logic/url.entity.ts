@@ -33,8 +33,10 @@ export default class UrlEntity {
   }
 
   async find(input: ValidationSchemaUrlFind) {
-    const { url: longUrl } = input;
-    const url = await prisma.url.findFirst({ where: { longUrl } });
+    const { url: longUrl, luid } = input;
+    const url = await prisma.url.findFirst({
+      where: { longUrl, userId: luid },
+    });
 
     if (!url) {
       throw new TRPCError({

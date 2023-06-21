@@ -5,14 +5,17 @@ import Link from "next/link";
 import { api } from "@/utils/api";
 import { DocumentDuplicateIcon } from "@heroicons/react/24/outline";
 import { getLocalUser } from "@/utils/getLocalUser";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { TRPCError } from "@trpc/server";
 import { toastInstance } from "@/utils/toast";
 import { handleError } from "@/utils/handleError";
 import ReactLoading from "react-loading";
+import { useRouter } from "next/router";
 
 const Home: NextPage = () => {
+  const [url, setUrl] = useState<string>();
+
   return (
     <div className="flex h-screen flex-col items-center justify-center p-5">
       <div className="text-center">
@@ -20,17 +23,19 @@ const Home: NextPage = () => {
         <p className="text-md">Shorter. Easier. Cleaner.</p>
       </div>
       <div className="mt-8 w-full max-w-xl">
-        <InputUrlForm />
+        <InputUrlForm setUrl={setUrl} />
       </div>
-      <div className="mt-2 flex w-full max-w-xl justify-between bg-slate-600 p-2">
-        <p className="text-slate-300">Hey this is your url copy it</p>
-        <DocumentDuplicateIcon
-          onClick={() => {
-            console.log("Do copy");
-          }}
-          className="h-6 w-6 text-slate-100 hover:cursor-pointer"
-        />
-      </div>
+      {url && (
+        <div className="mt-2 flex w-full max-w-xl justify-between bg-slate-600 p-2">
+          <p className="text-slate-300">{url}</p>
+          <DocumentDuplicateIcon
+            onClick={() => {
+              console.log("Do copy");
+            }}
+            className="h-6 w-6 text-slate-100 hover:cursor-pointer"
+          />
+        </div>
+      )}
     </div>
   );
 };
@@ -39,7 +44,11 @@ type Inputs = {
   url: string;
 };
 
-const InputUrlForm = () => {
+const InputUrlForm = ({
+  setUrl,
+}: {
+  setUrl: Dispatch<SetStateAction<string | undefined>>;
+}) => {
   const {
     register,
     handleSubmit,
@@ -50,9 +59,15 @@ const InputUrlForm = () => {
   const { mutate, data, isLoading, error } = api.url.create.useMutation({
     onSuccess: (data) => {
       console.log("onSuccess create url", data?.shortCode);
+      setUrl(`${window.location.origin}/` + data?.shortCode);
     },
-    onError: handleError,
+    onError: (error) => {
+      setUrl(undefined);
+      handleError(error);
+    },
   });
+
+  // const {} = api.url.show.useQuery({});
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     mutate({
@@ -70,7 +85,7 @@ const InputUrlForm = () => {
         <input
           id="first_name"
           placeholder="http://yourURL"
-          className="block w-full rounded-l bg-white p-2.5 text-sm text-gray-900  outline-0 outline-slate-600 dark:bg-white dark:placeholder-slate-400"
+          className="block h-10 w-full rounded-l bg-white p-2.5 text-sm text-gray-900  outline-0 outline-slate-600 dark:bg-white dark:placeholder-slate-400"
           autoComplete="off"
           {...register("url", { required: "Please enter your URL" })}
         />
