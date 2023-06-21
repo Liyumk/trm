@@ -63,7 +63,13 @@ const InputUrlForm = ({
     },
     onError: (error) => {
       setUrl(undefined);
-      handleError(error);
+      const isInternalServerError =
+        error.data?.code === "INTERNAL_SERVER_ERROR";
+      if (isInternalServerError) {
+        toastInstance({ message: "Something went wrong.", type: "error" });
+      } else {
+        toastInstance({ message: error.message, type: "error" });
+      }
     },
   });
 
