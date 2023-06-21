@@ -2,10 +2,12 @@ import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { type AppType } from "next/app";
 import { api } from "@/utils/api";
-import "@/styles/globals.css";
 import Head from "next/head";
 import { useLocalUser } from "@/hooks/useLocalUser";
-import { useEffect } from "react";
+import { ToastContainer } from "react-toastify";
+
+import "@/styles/globals.css";
+import "react-toastify/dist/ReactToastify.css";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -21,6 +23,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <meta name="description" content="Programming Articles" />
       </Head>
       <Component {...pageProps} />
+      <ToastContainer />
     </SessionProvider>
   );
 };

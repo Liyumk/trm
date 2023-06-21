@@ -1,21 +1,20 @@
 import { api } from "@/utils/api";
 import { getEnv } from "@/utils/getEnv";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export const useLocalUser = () => {
-  const { isDev } = getEnv();
-  const [luid, setLuid] = useState<string>("");
+  // const { isDev } = getEnv();
 
   const { mutate, data, isLoading } = api.user.createTemporary.useMutation();
 
-  let initialRender = true;
+  // let initialRender = true;
 
   useEffect(() => {
     const localUserId = localStorage.getItem("luid");
-    if (initialRender && isDev) {
-      initialRender = false;
-      return;
-    }
+    // if (initialRender && isDev) {
+    //   initialRender = false;
+    //   return;
+    // }
 
     if (!localUserId) {
       mutate();

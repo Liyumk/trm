@@ -7,6 +7,10 @@ import { DocumentDuplicateIcon } from "@heroicons/react/24/outline";
 import { getLocalUser } from "@/utils/getLocalUser";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { TRPCError } from "@trpc/server";
+import { toastInstance } from "@/utils/toast";
+import { handleError } from "@/utils/handleError";
+import ReactLoading from "react-loading";
 
 const Home: NextPage = () => {
   return (
@@ -47,16 +51,8 @@ const InputUrlForm = () => {
     onSuccess: (data) => {
       console.log("onSuccess create url", data?.shortCode);
     },
-    onError: (error) => {
-      console.log("error has occured", error.data?.code);
-    },
+    onError: handleError,
   });
-
-  useEffect(() => {
-    const errorMessage = error?.data?.zodError?.fieldErrors;
-
-    console.log("errorMessage", errorMessage);
-  }, [error]);
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     mutate({
@@ -64,6 +60,7 @@ const InputUrlForm = () => {
       luid: getLocalUser(),
     });
   };
+
   return (
     <div>
       <form
@@ -79,9 +76,13 @@ const InputUrlForm = () => {
         />
         <button
           type="submit"
-          className="rounded-r bg-slate-100 px-3.5 py-2.5 text-slate-800 shadow-sm hover:bg-slate-200"
+          className="flex w-24 items-center justify-center rounded-r bg-slate-100 px-3.5 py-2.5 text-slate-800 shadow-sm hover:bg-slate-200"
         >
-          Shorten!
+          {isLoading ? (
+            <ReactLoading type="spin" color="#000" height={20} width={20} />
+          ) : (
+            "Shorten!"
+          )}
         </button>
       </form>
       {errors.url?.message && (
