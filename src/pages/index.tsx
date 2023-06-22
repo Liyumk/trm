@@ -12,6 +12,7 @@ import { toastInstance } from "@/utils/toast";
 import { handleError } from "@/utils/handleError";
 import ReactLoading from "react-loading";
 import { useRouter } from "next/router";
+import { useLocalUser } from "@/hooks/useLocalUser";
 
 const Home: NextPage = () => {
   const [url, setUrl] = useState<string>();
@@ -56,17 +57,27 @@ const InputUrlForm = ({
     formState: { errors },
   } = useForm<Inputs>();
 
+  const getBaseUrl = () => {
+    if (typeof window !== "undefined") {
+      return window.location.origin.replace(/^https?\:\/\//i, "");
+    }
+  };
+
   const { mutate, data, isLoading, error } = api.url.create.useMutation({
     onSuccess: (data) => {
       console.log("onSuccess create url", data?.shortCode);
-      setUrl(`${window.location.origin}/` + data?.shortCode);
+      setUrl(`${getBaseUrl()}/` + data?.shortCode);
     },
     onError: (error) => {
       setUrl(undefined);
       const isInternalServerError =
         error.data?.code === "INTERNAL_SERVER_ERROR";
       if (isInternalServerError) {
-        toastInstance({ message: "Something went wrong.", type: "error" });
+        toastInstance({
+          message: "Something went wrong. Please try again.",
+          type: "error",
+        });
+        useLocalUser();
       } else {
         toastInstance({ message: error.message, type: "error" });
       }

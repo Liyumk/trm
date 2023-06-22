@@ -23,6 +23,11 @@ export const urlRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       return await new UrlEntity().find(input);
     }),
+  findUrlByShortCode: publicProcedure
+    .input(z.object({ shortCode: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return await new UrlEntity().findUrlByShortCode(input);
+    }),
 });
 
 const UrlURL = async (longUrl: string) => {};

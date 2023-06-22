@@ -48,6 +48,21 @@ export default class UrlEntity {
     return url;
   }
 
+  async findUrlByShortCode(input: { shortCode: string }) {
+    const { shortCode } = input;
+    const url = await prisma.url.findUnique({ where: { shortCode } });
+
+    if (!url)
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "URL not found",
+      });
+
+    const longUrl = url.longUrl;
+
+    return longUrl;
+  }
+
   private async shortenUrl() {
     let isUnique = false;
     let shortCode = "";
