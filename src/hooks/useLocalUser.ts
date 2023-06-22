@@ -7,14 +7,14 @@ export const useLocalUser = () => {
 
   const { mutate, data, isLoading } = api.user.createTemporary.useMutation();
 
-  // let initialRender = true;
+  let initialRender = true;
 
   useEffect(() => {
     const localUserId = localStorage.getItem("luid");
-    // if (initialRender && isDev) {
-    //   initialRender = false;
-    //   return;
-    // }
+    if (initialRender) {
+      initialRender = false;
+      return;
+    }
 
     if (!localUserId) {
       mutate();
