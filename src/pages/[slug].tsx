@@ -40,10 +40,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       },
     };
   } catch (err) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "Something went wrong. Please try again.",
-    });
+    throw new Error(err as string);
   }
 };
 
