@@ -7,6 +7,7 @@ interface Props {
 
 export const toastInstance = ({ message, type }: Props) =>
   toast(message, {
+    toastId: message,
     position: "top-right",
     type: type,
     autoClose: 5000,
