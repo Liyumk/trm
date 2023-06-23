@@ -3,7 +3,7 @@ import { getEnv } from "@/utils/getEnv";
 import { useEffect } from "react";
 
 export const useLocalUser = () => {
-  // const { isDev } = getEnv();
+  const { isDev } = getEnv();
 
   const { mutate, data, isLoading } = api.user.createTemporary.useMutation();
 
@@ -11,7 +11,7 @@ export const useLocalUser = () => {
 
   useEffect(() => {
     const localUserId = localStorage.getItem("luid");
-    if (initialRender) {
+    if (initialRender && isDev) {
       initialRender = false;
       return;
     }
