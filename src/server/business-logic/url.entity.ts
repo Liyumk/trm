@@ -6,12 +6,14 @@ import {
 import { prisma } from "../db";
 import { ALIAS_LENGTH, CHARACTERS } from "@/utils/constants";
 import { TRPCError } from "@trpc/server";
+import isUrl from "is-url";
+import { addHttpToUrl } from "@/utils/addHttpToUrl";
 
 export default class UrlEntity {
   async create(input: ValidationSchemaUrlCreate) {
     const { url: newLongUrl, alias, luid } = input;
 
-    this.isUrl(newLongUrl);
+    this.checkUrl(newLongUrl);
 
     const url = await prisma.url.findFirst({
       where: { longUrl: newLongUrl, userId: luid },
@@ -82,12 +84,9 @@ export default class UrlEntity {
     return shortCode;
   }
 
-  private isUrl(url: string) {
-    const urlPattern =
-      /^(https?:\/\/)?(www\.)?[a-zA-Z0-9-_.~!*'();:@&=+$,/?#[\]]+\.[a-zA-Z0-9-_.~!*'();:@&=+$,/?#[\]]+$/i;
-
-    var isURL = urlPattern.test(url);
-    console.log(url, "isUrl", isURL);
+  private checkUrl(url: string) {
+    const urlWithHttp = addHttpToUrl(url);
+    var isURL = isUrl(urlWithHttp);
 
     if (!isURL)
       throw new TRPCError({

@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { GetServerSideProps } from "next";
 import { prisma } from "@/server/db";
 import { TRPCError } from "@trpc/server";
+import { addHttpToUrl } from "@/utils/addHttpToUrl";
 
 const ShortUrl = ({ statusCode }: { statusCode: number }) => {
   return null;
@@ -17,14 +18,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     const url = await prisma.url.findFirst({
       where: { shortCode: slug },
     });
-
-    function addHttpToUrl(url: string) {
-      if (!url.startsWith("http://") && !url.startsWith("https://")) {
-        url = "http://" + url;
-      }
-      console.log(url);
-      return url;
-    }
 
     if (!url) {
       return {
