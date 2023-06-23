@@ -17,6 +17,27 @@ import { useLocalUser } from "@/hooks/useLocalUser";
 const Home: NextPage = () => {
   const [url, setUrl] = useState<string>();
 
+  const onCopy = () => {
+    if (url) {
+      navigator.clipboard
+        .writeText(url)
+        .then(() => {
+          toastInstance({
+            message: "Copied url to clipboard!",
+            type: "success",
+            position: "bottom-center",
+          });
+        })
+        .catch(() => {
+          toastInstance({
+            message: "Failed to copy url to clipboard!",
+            type: "error",
+            position: "bottom-center",
+          });
+        });
+    }
+  };
+
   return (
     <div className="flex h-screen flex-col items-center justify-center p-5">
       <div className="text-center">
@@ -30,9 +51,7 @@ const Home: NextPage = () => {
         <div className="mt-2 flex w-full max-w-xl justify-between bg-slate-600 p-2">
           <p className="text-slate-300">{url}</p>
           <DocumentDuplicateIcon
-            onClick={() => {
-              console.log("Do copy");
-            }}
+            onClick={onCopy}
             className="h-6 w-6 text-slate-100 hover:cursor-pointer"
           />
         </div>
