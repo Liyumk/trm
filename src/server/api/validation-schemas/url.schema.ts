@@ -16,3 +16,12 @@ export const validationSchemaUrlFind = z.object({
 });
 
 export type ValidationSchemaUrlFind = z.TypeOf<typeof validationSchemaUrlFind>;
+
+export const validationSchemaUrlFindUrlByShortUrl = z.object({
+  shortCode: z.string(),
+  alias: z.string().optional(),
+});
+
+export type ValidationSchemaUrlFindUrlByShortUrl = z.TypeOf<
+  typeof validationSchemaUrlFindUrlByShortUrl
+>;

@@ -2,6 +2,7 @@ import { z } from "zod";
 import {
   ValidationSchemaUrlCreate,
   ValidationSchemaUrlFind,
+  ValidationSchemaUrlFindUrlByShortUrl,
 } from "../api/validation-schemas/url.schema";
 import { prisma } from "../db";
 import { ALIAS_LENGTH, CHARACTERS } from "@/utils/constants";
@@ -11,8 +12,10 @@ import { addHttpToUrl } from "@/utils/addHttpToUrl";
 
 export default class UrlEntity {
   async create(input: ValidationSchemaUrlCreate) {
-    const { url: longUrl, alias, luid } = input;
+    const { url: longUrl, alias: aliasInput, luid } = input;
     const trimmedLongUrl = longUrl.trim();
+    let shortCode = null;
+    const alias = aliasInput ? aliasInput : null;
 
     this.checkUrl(trimmedLongUrl);
 
@@ -23,13 +26,27 @@ export default class UrlEntity {
       return url;
     }
 
-    const shortCode = await this.shortenUrl();
+    if (alias) {
+      const existingAlias = await prisma.url.findFirst({
+        where: { alias: alias },
+      });
+
+      if (existingAlias) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Alias already exists",
+        });
+      }
+    } else {
+      shortCode = await this.shortenUrl();
+    }
+
     const newUrl = await prisma.url.create({
       data: {
         longUrl: trimmedLongUrl,
         shortCode: shortCode,
         userId: luid,
-        alias: alias ? alias : null,
+        alias: alias,
       },
     });
     return newUrl;
@@ -51,8 +68,8 @@ export default class UrlEntity {
     return url;
   }
 
-  async findUrlByShortCode(input: { shortCode: string }) {
-    const { shortCode } = input;
+  async findUrlByShortUrl(input: ValidationSchemaUrlFindUrlByShortUrl) {
+    const { shortCode, alias } = input;
     const url = await prisma.url.findUnique({ where: { shortCode } });
 
     if (!url)

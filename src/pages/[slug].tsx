@@ -16,7 +16,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   try {
     const url = await prisma.url.findFirst({
-      where: { shortCode: slug },
+      where: { OR: [{ shortCode: slug }, { alias: slug }] },
     });
 
     if (!url) {

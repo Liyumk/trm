@@ -18,7 +18,7 @@ datasource db {
 model Url {
     id        String   @id @default(cuid())
     longUrl   String
-    shortCode String   @unique
+    shortCode String?  @unique
     alias     String?
     clicks    Int      @default(0)
     createdAt DateTime @default(now())
