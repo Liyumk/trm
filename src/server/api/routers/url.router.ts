@@ -26,7 +26,7 @@ export const urlRouter = createTRPCRouter({
   findUrlByShortCode: publicProcedure
     .input(z.object({ shortCode: z.string() }))
     .query(async ({ ctx, input }) => {
-      return await new UrlEntity().findUrlByShortCode(input);
+      return await new UrlEntity().findUrlByShortUrl(input);
     }),
 });
 

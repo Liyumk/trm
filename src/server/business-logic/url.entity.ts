@@ -28,7 +28,16 @@ export default class UrlEntity {
 
     if (alias) {
       const existingAlias = await prisma.url.findFirst({
-        where: { alias: alias },
+        where: {
+          AND: [
+            {
+              alias,
+            },
+            {
+              longUrl: trimmedLongUrl,
+            },
+          ],
+        },
       });
 
       if (existingAlias) {
