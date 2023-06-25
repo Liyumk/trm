@@ -11,12 +11,13 @@ import { addHttpToUrl } from "@/utils/addHttpToUrl";
 
 export default class UrlEntity {
   async create(input: ValidationSchemaUrlCreate) {
-    const { url: newLongUrl, alias, luid } = input;
+    const { url: longUrl, alias, luid } = input;
+    const trimmedLongUrl = longUrl.trim();
 
-    this.checkUrl(newLongUrl);
+    this.checkUrl(trimmedLongUrl);
 
     const url = await prisma.url.findFirst({
-      where: { longUrl: newLongUrl, userId: luid },
+      where: { longUrl: trimmedLongUrl, userId: luid },
     });
     if (url) {
       return url;
@@ -25,7 +26,7 @@ export default class UrlEntity {
     const shortCode = await this.shortenUrl();
     const newUrl = await prisma.url.create({
       data: {
-        longUrl: newLongUrl,
+        longUrl: trimmedLongUrl,
         shortCode: shortCode,
         userId: luid,
         alias: alias ? alias : null,
@@ -93,7 +94,6 @@ export default class UrlEntity {
         code: "BAD_REQUEST",
         message: "Invalid URL",
       });
-    // return;
 
     return url;
   }
