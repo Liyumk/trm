@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "next build",
+    "build": "prisma migrate deploy && next build",
     "dev": "next dev",
     "postinstall": "prisma generate",
     "lint": "next lint",
-    "start": "next start"
+    "start": "prisma migrate deploy && next start"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
